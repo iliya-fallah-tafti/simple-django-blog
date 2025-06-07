@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load humanize static %}
+
+{% block content %}
+        <title>{% block title %}{{ post.title }}{% endblock %}</title>
+    <!-- **************** MAIN CONTENT START **************** -->
+    <main>
+        <!-- =======================
+        Inner intro START -->
+        <section class="pt-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card bg-dark-overlay-5 overflow-hidden card-bg-scale h-400 text-center"
+                             style="background-image:url({{ post.image.url }}); background-position: center left; background-size: cover;">
+                            <div class="card-img-overlay d-flex align-items-center p-3 p-sm-4">
+                                <div class="w-100 my-auto">
+                                    <h2 class="text-white display-5">{{ post.title }}</h2>
+                                    <ul class="nav nav-divider text-white-force align-items-center justify-content-center">
+                                        <li class="nav-item">
+                                            <div class="nav-link">
+                                                <div class="d-flex align-items-center text-white position-relative">
+                                                    <span class="ms-3">🧑‍💻<a href="{% url 'blog:author' author_username=post.author.username %}"
+                                                                             class="stretched-link text-reset btn-link">{{ post.author.username }}</a></span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="nav-item">🕐 {{ post.publish_date|naturaltime }}</li>
+                                        <li class="nav-item">👀 {{ post.content_view }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================
+        Main Content START -->
+        <section class="pt-0">
+            <div class="container position-relative" data-sticky-container>
+                <div class="row">
+                    <!-- Main Content -->
+                    <div class="col-lg-9 mb-5">
+                        <p class="excert">
+                            {{ post.content | safe }}
+                        </p>
+                    </div>
+
+                    <!-- Sidebar ADVERTISEMENT (اختیاری) -->
+                    <div class="col-lg-3">
+                        <div class="mt-4">
+                            <a href="#" class="d-block card-img-flash">
+                                <img src="assets/images/adv.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="comments-section mt-5">
+            <h3 class="mb-4 fw-bold">Comments</h3>
+            {% for comment in comments %}
+                <div class="card border-0 shadow-sm mb-4 bg-body-tertiary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0 text-primary fw-semibold">
+                                {{ comment.name }}
+                            </h5>
+                            <small class="text-muted">{{ comment.created_date|naturaltime }}</small>
+                        </div>
+                        <p class="card-text">{{ comment.message }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted fst-italic">No comments yet.</p>
+            {% endfor %}
+        </section>
+
+        <!-- Comment Form -->
+        <section class="comment-form mt-5">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body">
+                    <h4 class="mb-4 fw-bold">Leave a Comment</h4>
+                    <form method="POST" action="{% url 'blog:single' pk=post.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="post" value="{{ post.id }}">
+
+                        {% if request.user.is_authenticated %}
+                            <input type="hidden" name="name" value="{{ request.user.username }}">
+                            <input type="hidden" name="email" value="{{ request.user.email }}">
+                        {% else %}
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="name" placeholder="Your Name"
+                                           required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="email" class="form-control" name="email" placeholder="Your Email"
+                                           required>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <textarea class="form-control" name="message" rows="5" placeholder="Your Comment"
+                                      required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fs-6 fw-bold text-uppercase">
+                            Post Comment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <!-- Previous and Next Post Buttons -->
+        <div class="row mt-5">
+            <div class="col-6 text-start">
+                {% if previous_post %}
+                    <a href="{% url 'blog:single' previous_post.pk %}" class="btn btn-outline-primary">
+                        ← previous post ({{ previous_post.title|truncatechars:30 }})
+                    </a>
+                {% endif %}
+            </div>
+            <div class="col-6 text-end">
+                {% if next_post %}
+                    <a href="{% url 'blog:single' next_post.pk %}" class="btn btn-outline-primary">
+                        next post ({{ next_post.title|truncatechars:30 }}) →
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% load blog_tags %}
+{% block content %}
+    <title>{% block title %}Home{% endblock %}</title>
+
+    <!-- =======================
+    Main content START -->
+    <section class="position-relative">
+        <div class="container" data-sticky-container>
+            <div class="row">
+                <!-- Main Post START -->
+                <div class="col-lg-9">
+                    <!-- Title -->
+                    <div class="mb-4">
+                        <h2 class="m-0"><i class="bi bi-hourglass-top me-2"></i>Today's top highlights</h2>
+                        <p>Latest breaking news, pictures, videos, and special reports</p>
+                    </div>
+                    <div class="row gy-4">
+                        {% latest_posts as posts %}
+                        {% for post in posts %}
+                            <div class="col-sm-6">
+                                <div class="card h-100">
+                                    <!-- مربع و مرتب -->
+                                    <div class="rounded overflow-hidden" style="width: 80%; aspect-ratio: 1 / 1;">
+                                        <img src="{{ post.image.url }}" alt="Card image"
+                                             class="w-100 h-100 object-fit-cover">
+                                    </div>
+                                    <div class="card-body px-0 pt-3">
+                                        {% if post.Sponsored %}
+                                            <a href="#" class="mb-0 text-body small" tabindex="0" role="button"
+                                               data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus"
+                                               data-bs-placement="top"
+                                               data-bs-content="You're seeing this ad because your activity meets the intended audience of our site.">
+                                                <i class="bi bi-info-circle ps-1"></i> Sponsored
+                                            </a>
+                                        {% endif %}
+                                        <h4 class="card-title mt-2">
+                                            <a href="{% url 'blog:single' pk=post.id %}" class="btn-link text-reset fw-bold">{{ post.title }}</a>
+                                        </h4>
+                                        <ul class="nav nav-divider align-items-center d-none d-sm-inline-block">
+                                            <li class="nav-item">
+                                                <div class="nav-link">
+                                                    <div class="d-flex align-items-center position-relative">
+                                <span class="ms-3">by
+                                    <a href="{% url 'blog:author' author_username=post.author.username %}" class="stretched-link text-reset btn-link">{{ post.author }}</a>
+                                </span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">{{ post.publish_date|naturaltime }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Main Post END -->
+            </div> <!-- Row end -->
+        </div>
+    </section>
+    <!-- =======================
+    Main content END -->
+
+    <!-- Divider -->
+    <div class="container">
+        <div class="border-bottom border-primary border-2 opacity-1"></div>
+    </div>
+
+{% endblock %}

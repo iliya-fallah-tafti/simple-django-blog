@@ -1,0 +1,17 @@
+{% if messages %}
+    <div class="container position-absolute start-50 translate-middle-x"
+         style="top: 120px; z-index: 1055; max-width: 600px;">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-lg backdrop-blur text-white border-0 rounded-3 px-4"
+                 style="{% if message.tags == 'success' %}background-color: rgba(25, 135, 84, 0.2);
+                 {% elif message.tags == 'warning' %}background-color: rgba(255, 193, 7, 0.2);
+                 {% elif message.tags == 'info' %}background-color: rgba(13, 202, 240, 0.2);
+                 {% elif message.tags == 'error' %}background-color: rgba(220, 53, 69, 0.2);  <!-- توجه: 'error' نه 'danger' -->
+                 {% else %}background-color: rgba(108, 117, 125, 0.2);{% endif %}">
+                {{ message }}
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

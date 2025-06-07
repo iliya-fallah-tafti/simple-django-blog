@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load static %}
+    <title>{% block title %}About{% endblock %}</title>
+    <!-- **************** MAIN CONTENT START **************** -->
+    <main>
+
+        <!-- =======================
+        Inner intro START -->
+        <section class="pt-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card bg-dark-overlay-4 overflow-hidden card-bg-scale h-400 text-center"
+                             style="background-image:url({% static 'assets/images/blog/16by9/09.jpg' %}); background-position: center left; background-size: cover;">
+                            <!-- Card Image overlay -->
+                            <div class="card-img-overlay d-flex align-items-center p-3 p-sm-4">
+                                <div class="w-100 my-auto">
+                                    <h1 class="text-white display-4">About us</h1>
+                                    <!-- breadcrumb -->
+                                    <nav class="d-flex justify-content-center" aria-label="breadcrumb">
+                                        <ol class="breadcrumb breadcrumb-dark breadcrumb-dots mb-0">
+                                            <li class="breadcrumb-item"><a href="{% url 'main:home' %}"><i
+                                                    class="bi bi-house me-1"></i> Home</a></li>
+                                            <li class="breadcrumb-item active">About us</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- =======================
+        Inner intro END -->
+
+        <!-- =======================
+        About START -->
+        <section class="pt-4 pb-0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-9 mx-auto">
+                        <h2>About us subject</h2>
+                        <p class="lead">About us context</p>
+                        <p>About us context</p>
+                        <!-- Service END -->
+                    </div>  <!-- Col END -->
+                </div>
+            </div>
+        </section>
+        <!-- =======================
+        About END -->
+    </main>
+    <!-- **************** MAIN CONTENT END **************** -->
+
+{% endblock %}

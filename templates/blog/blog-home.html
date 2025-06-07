@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="container mt-4">
+            <div class="row">
+
+                <div class="col-lg-8">
+                    <section class="mb-4">
+                        <div class="bg-success bg-opacity-10 text-center rounded-3 p-3">
+                            <h1 class="text-success">Posts</h1>
+                            <nav class="d-flex justify-content-center" aria-label="breadcrumb">
+                                <ol class="breadcrumb breadcrumb-dots mb-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'main:home' %}">
+                                            <i class="bi bi-house me-1"></i> Home
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumb-item active">All post</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </section>
+
+                    <section class="position-relative">
+                        <div class="row g-4">
+                            {% for post in posts %}
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="rounded overflow-hidden" style="aspect-ratio: 1 / 1;">
+                                            <img src="{{ post.image.url }}" alt="Card image"
+                                                 class="w-100 h-100 object-fit-cover">
+                                        </div>
+                                        <div class="card-body px-0 pt-3">
+                                            <h4 class="card-title">
+                                                <a href="{% url 'blog:single' pk=post.id %}"
+                                                   class="btn-link text-reset stretched-link fw-bold">
+                                                    {{ post.title }}
+                                                </a>
+                                            </h4>
+                                            <ul class="nav nav-divider align-items-center text-uppercase small">
+                                                <li class="nav-item">
+                                                    <a href="#"
+                                                       class="nav-link text-reset btn-link">{{ post.author.username }}</a>
+                                                </li>
+                                                <li class="nav-item">{{ post.publish_date|naturaltime }}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="col-12 text-center">
+                                    <p class="text-muted">No posts found.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if posts.has_other_pages %}
+                            <nav class="mt-5 d-flex justify-content-center" aria-label="Page navigation">
+                                <ul class="pagination pagination-bordered mb-0">
+                                    {% if posts.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ posts.previous_page_number }}">Prev</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link">Prev</span>
+                                        </li>
+                                    {% endif %}
+
+                                    {% for num in posts.paginator.page_range %}
+                                        {% if posts.number == num %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ num }}</span>
+                                            </li>
+                                        {% elif num >= posts.number|add:'-2' and num <= posts.number|add:'4' %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if posts.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    </section>
+                </div>
+
+                <div class="col-lg-4">
+                    <section class="mb-3">
+                        <div class="search-widget-container bg-success bg-opacity-10 rounded-3 p-3">
+                            <h5 class="text-success mb-2">Search</h5>
+                            <form class="search-form d-flex" action="{% url 'blog:search' %}" method="get">
+                                <input class="form-control form-control-sm me-2" placeholder="Search Posts" name="s" type="text"
+                                       onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Posts'">
+                                <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                    </section>
+
+                    <section class="mb-3">
+                        <div class="categories-widget-container bg-success bg-opacity-10 rounded-3 p-3">
+                            <h5 class="text-success mb-2">Categories</h5>
+                            {% for category in categories %}
+                                <div class="d-flex justify-content-between align-items-center bg-warning bg-opacity-25 rounded px-2 py-1 mb-1">
+                                    <a href="{% url 'blog:blog' cat_name=category.name %}"
+                                       class="text-warning text-decoration-none">
+                                        {{ category.name }}
+                                    </a>
+                                    <span class="badge bg-warning text-dark">{{ category.post_count }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load static %}
+    <title>{% block title %}Signup{% endblock %}</title>
+    <!-- **************** MAIN CONTENT START **************** -->
+    <main>
+
+        <!-- =======================
+        Inner intro START -->
+        <section>
+            {% include 'includes/messages.html' %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 col-lg-8 col-xl-6 mx-auto">
+                        <div class="bg-primary bg-opacity-10 rounded p-4 p-sm-5">
+                            <h2>Create your free account</h2>
+                            <!-- Form START -->
+                            <form class="mt-4" action="{% url 'accounts:signup' %}" method="POST">
+                                {% csrf_token %}
+                                <!-- username -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_username">Username</label>
+                                    <input type="text" class="form-control" name="username"
+                                           id="id_username" required
+                                           value="{{ form.username.value|default_if_none:'' }}">
+                                    {% if form.username.errors %}
+                                        <div class="text-danger">{{ form.username.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_email">Email address</label>
+                                    <input type="email" class="form-control" name="email"
+                                           id="id_email" required
+                                           aria-describedby="emailHelp" placeholder="E-mail"
+                                           value="{{ form.email.value|default_if_none:'' }}">
+                                    <small id="emailHelp" class="form-text">We'll never share your email with anyone else.</small>
+                                    {% if form.email.errors %}
+                                        <div class="text-danger">{{ form.email.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Password -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_password1">Password</label>
+                                    <input type="password" class="form-control" name="password1"
+                                           id="id_password1" required
+                                           placeholder="*********">
+                                    {% if form.password1.errors %}
+                                        <div class="text-danger">{{ form.password1.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Confirm Password -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="id_password2">Confirm Password</label>
+                                    <input type="password" class="form-control" name="password2"
+                                           id="id_password2" required
+                                           placeholder="*********">
+                                    {% if form.password2.errors %}
+                                        <div class="text-danger">{{ form.password2.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Button -->
+                                <div class="row align-items-center">
+                                    <div class="col-sm-4">
+                                        <button type="submit" class="btn btn-success">Sign me up</button>
+                                    </div>
+                                    <div class="col-sm-8 text-sm-end">
+                                        <span>Have an account? <a href="{% url 'accounts:login' %}"><u>Login</u></a></span>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Form END -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- =======================
+        Inner intro END -->
+
+    </main>
+    <!-- **************** MAIN CONTENT END **************** -->
+{% endblock %}

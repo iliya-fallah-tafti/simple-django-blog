@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load static %}
+    <title>{% block title %}Contact{% endblock %}</title>
+    <!-- **************** MAIN CONTENT START **************** -->
+    <main>
+        <!-- =======================
+        Inner intro START -->
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9 mx-auto text-center">
+                        <h1 class="display-4">Contact us</h1>
+                        <!-- breadcrumb -->
+                        <nav class="d-flex justify-content-center" aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-dots mb-0">
+                                <li class="breadcrumb-item"><a href="{% url 'main:home' %}"><i
+                                        class="bi bi-house me-1"></i> Home</a>
+                                </li>
+                                <li class="breadcrumb-item active">Contact us</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- =======================
+        Inner intro END -->
+
+        <!-- =======================
+        Contact info START -->
+        <section class="pt-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-9 mx-auto">
+                        <div class="row mt-5">
+                            <div class="col-sm-6">
+                                <h3>Contact Information </h3>
+                                <p>Get in touch with us to see how we can help you with your query</p>
+                                <address>750 Sing Sing Rd, Horseheads, NY, 14845</address>
+                                <p>Call: <a href="#" class="text-reset"><u>469-537-2410 (Toll-free)</u></a></p>
+                                <p>Email: <a href="#" class="text-reset"><u>contact@example.com</u></a></p>
+                                <p>Support time: Monday to Saturday
+                                    <br>
+                                    9:00 am to 5:30 pm
+                                </p>
+                            </div>
+                        </div>
+
+                        <hr class="my-5">
+
+                        <div class="row">
+                            {% include 'includes/messages.html' %}
+                            <div class="col-12">
+                                <h2>Contact us</h2>
+                                <p>Please fill in the form below and we will contact you very soon. Your email address
+                                    will not be published.</p>
+                                <!-- Form START -->
+                                <form class="contact-form" id="contact-form" name="contactform" method="POST"
+                                      action="{% url 'main:contact' %}">
+                                    <!-- Main form -->
+                                    <div class="row">
+                                        {% csrf_token %}
+                                        <div class="col-md-6">
+                                            <!-- name -->
+                                            <div class="mb-3">
+                                                <input required id="con-name" name="name" type="text"
+                                                       class="form-control" placeholder="Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- email -->
+                                            <div class="mb-3">
+                                                <input required id="con-email" name="email" type="email"
+                                                       class="form-control" placeholder="E-mail">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <!-- Subject -->
+                                            <div class="mb-3">
+                                                <input required id="con-subject" name="subject" type="text"
+                                                       class="form-control" placeholder="Subject">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <!-- Message -->
+                                            <div class="mb-3">
+                                                <textarea required id="con-message" name="message" cols="40" rows="6"
+                                                          class="form-control" placeholder="Message"></textarea>
+                                            </div>
+                                        </div>
+                                        <!-- submit button -->
+                                        <div class="col-md-12 text-start">
+                                            {{ form.captcha }}
+                                            <button class="btn btn-primary w-100" type="submit">Send Message</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                {% if messages %}
+                                    <div class="mt-4">
+                                        {% for message in messages %}
+                                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                                                 role="alert">
+                                                {{ message }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <!-- Form END -->
+                            </div>
+                        </div>
+                    </div>  <!-- Col END -->
+                </div>
+            </div>
+        </section>
+        <!-- =======================
+        Contact info END -->
+    </main>
+    <!-- **************** MAIN CONTENT END **************** -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                const messages = document.querySelectorAll('.alert');
+                messages.forEach(function (message) {
+                    message.classList.add('fade');
+                    setTimeout(function () {
+                        message.remove();
+                    }, 500);
+                });
+            }, 5000);
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,203 @@
+{% load static %}
+{% load compress %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        const storedTheme = localStorage.getItem('theme');
+
+        const getPreferredTheme = () => {
+            if (storedTheme) {
+                return storedTheme;
+            }
+            return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+
+        const setTheme = (theme) => {
+            if (theme === 'auto') {
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-bs-theme', systemPrefersDark ? 'dark' : 'light');
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', theme);
+            }
+        }
+
+        setTheme(getPreferredTheme());
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const el = document.querySelector('.theme-icon-active');
+            if (el) {
+                const showActiveTheme = (theme) => {
+                    const activeThemeIcon = document.querySelector('.theme-icon-active use');
+                    const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
+                    const svgOfActiveBtn = btnToActive.querySelector('svg.mode-switch use').getAttribute('href');
+
+                    document.querySelectorAll('[data-bs-theme-value]').forEach(el => el.classList.remove('active'));
+                    btnToActive.classList.add('active');
+                    activeThemeIcon.setAttribute('href', svgOfActiveBtn);
+                }
+
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                    if (!storedTheme || storedTheme === 'auto') {
+                        setTheme(getPreferredTheme());
+                        showActiveTheme(getPreferredTheme());
+                    }
+                });
+
+                showActiveTheme(getPreferredTheme());
+
+                document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
+                    toggle.addEventListener('click', () => {
+                        const theme = toggle.getAttribute('data-bs-theme-value');
+                        localStorage.setItem('theme', theme);
+                        setTheme(theme);
+                        showActiveTheme(theme);
+                    });
+                });
+            }
+        });
+    </script>
+
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com/">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&family=Rubik:wght@400;500;700&display=swap"
+          rel="stylesheet">
+
+    {% compress css %}
+        <link rel="stylesheet" href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendor/tiny-slider/tiny-slider.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendor/plyr/plyr.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    {% endcompress %}
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XZ4W34ZJ0L"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-XZ4W34ZJ0L');
+    </script>
+</head>
+
+<body>
+<header class="navbar-light navbar-sticky header-static">
+    <div class="navbar-top d-none d-lg-block small">
+        <div class="container">
+            <div class="d-md-flex justify-content-between align-items-center my-2">
+                <ul class="nav">
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item"><a href="{% url 'accounts:profile' %}" class="nav-link"><i
+                                class="fas fa-user"></i> {{ request.user.username }}</a></li>
+                        <li class="nav-item"><a href="{% url 'accounts:logout' %}" class="nav-link">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a href="{% url 'accounts:login' %}" class="nav-link">Login</a></li>
+                        <li class="nav-item"><a href="{% url 'accounts:signup' %}" class="nav-link">Signup</a></li>
+                    {% endif %}
+                </ul>
+
+                <div class="d-flex align-items-center">
+                    <div class="nav-item dropdown mx-2">
+                        <button class="modeswitch" id="bd-theme" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <svg class="theme-icon-active" width="16" height="16" fill="currentColor">
+                                <use href="#icon-sun"/>
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme">
+                            <li class="mb-1">
+                                <button class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                                    <svg class="bi bi-brightness-high-fill fa-fw mode-switch me-1" width="16"
+                                         height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <use href="#icon-sun"/>
+                                    </svg>
+                                    Light
+                                </button>
+                            </li>
+                            <li class="mb-1">
+                                <button class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+                                    <svg class="bi bi-moon-stars-fill fa-fw mode-switch me-1" width="16" height="16"
+                                         fill="currentColor" viewBox="0 0 16 16">
+                                        <use href="#icon-moon"/>
+                                    </svg>
+                                    Dark
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item d-flex align-items-center active"
+                                        data-bs-theme-value="auto">
+                                    <svg class="bi bi-circle-half fa-fw mode-switch me-1" width="16" height="16"
+                                         fill="currentColor" viewBox="0 0 16 16">
+                                        <use href="#icon-auto"/>
+                                    </svg>
+                                    Auto
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="border-bottom border-2 border-primary opacity-1"></div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                <span class="text-body h6 d-none d-sm-inline-block">Menu</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav navbar-nav-scroll mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'main:home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'main:about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'blog:blog-index' %}">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'main:contact' %}">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+{% block content %}{% endblock %}
+
+{% compress js %}
+    <script src="{% static 'assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/tiny-slider/tiny-slider.js' %}"></script>
+    <script src="{% static 'assets/vendor/sticky-js/sticky.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/plyr/plyr.js' %}"></script>
+    <script src="{% static 'assets/js/functions.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    bootstrap.Alert.getOrCreateInstance(alert).close();
+                }, 4000);
+            });
+        });
+    </script>
+{% endcompress %}
+
+<svg style="display: none;">
+    <symbol id="icon-sun" viewBox="0 0 16 16">
+        <path d="M8 4a4 4 0 1 1 0 8A4 4 0 0 1 8 4zm0-4a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 8 0z..."/>
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 16 16">
+        <path d="M6 .278a.768.768..."/>
+    </symbol>
+    <symbol id="icon-auto" viewBox="0 0 16 16">
+        <path d="M8 15A7 7..."/>
+    </symbol>
+</svg>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <title>{% block title %}Login{% endblock %}</title>
+    <!-- **************** MAIN CONTENT START **************** -->
+    <main>
+
+        <!-- =======================
+        Inner intro START -->
+        <section>
+            <div class="container">
+                {% include 'includes/messages.html' %}
+                <div class="row">
+                    <div class="col-md-10 col-lg-8 col-xl-6 mx-auto">
+                        {% csrf_token %}
+                        <div class="p-4 p-sm-5 bg-primary bg-opacity-10 rounded">
+                            <h2>Log in to your account</h2>
+                            <!-- Form START -->
+                            <form method="POST" action="{% url 'accounts:login' %}" class="mt-4">
+                                {% csrf_token %}
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="exampleInputEmail1">Email/Username</label>
+                                    <input type="text" class="form-control" id="username" name="username">
+                                </div>
+                                <!-- Password -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="exampleInputPassword1">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password">
+                                </div>
+                                {{ form.captcha }}
+                                <div class="row align-items-center">
+                                    <div class="col-sm-4">
+                                        <button type="submit" class="btn btn-success">Login</button>
+                                    </div>
+                                    <div class="col-sm-8 text-sm-end">
+                                        <span>Don't have an account? <a
+                                                href="{% url 'accounts:signup' %}"><u>Sign up</u></a></span>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Form END -->
+                            <hr>
+                            <!-- Social-media btn -->
+                            <div class="text-center">
+                                <ul class="list-unstyled d-sm-flex mt-3 justify-content-center">
+                                    <li class="mx-2">
+                                        <a href="{% url 'accounts:forgot_password' %}"
+                                           class="btn bg-facebook d-inline-block"><i>Forgot Password?</i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- =======================
+        Inner intro END -->
+    </main>
+{% endblock %}
